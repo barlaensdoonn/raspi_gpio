@@ -11,14 +11,6 @@ import logging
 from datetime import date, datetime, timedelta
 
 
-def initialize(pin):
-    pi = pigpio.pi()
-    pi.set_mode(pin, pigpio.OUTPUT)
-    pi.write(pin, 0)
-
-    return pi
-
-
 def get_now():
     return datetime.now()
 
@@ -36,6 +28,21 @@ def get_future_time(ref_day, hour):
 
 def get_time_interval(ref_day, time):
     return time - ref_day
+
+
+def get_initial_state(now):
+    if now.hour > 21 or now.hour < 10:
+        return 1
+    else:
+        return -1
+
+
+def initialize(pin, state):
+    pi = pigpio.pi()
+    pi.set_mode(pin, pigpio.OUTPUT)
+    pi.write(pin, state)
+
+    return pi
 
 
 def work_night_shift(pi, switch, state):
@@ -76,8 +83,8 @@ if __name__ == '__main__':
     logging.basicConfig(filename=log_path, format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
 
     switch = 7  # gpio pin controlling relay
+    state = get_initial_state(get_now())
     pi = initialize(switch)
-    state = 1
     life = True
 
     while life:
