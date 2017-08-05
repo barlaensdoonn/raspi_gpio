@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     switch = 7  # gpio pin controlling relay
     state = get_initial_state(get_now())
-    pi = initialize(switch)
+    pi = initialize(switch, state)
     life = True
 
     while life:
