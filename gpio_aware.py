@@ -34,9 +34,9 @@ def get_initial_state(now):
     '''return the inverse of the state we want due to state *= -1 in work_night_shift()'''
 
     if now.hour > 21 or now.hour < 10:
-        return 1
+        return -1
     else:
-        return 0
+        return 1
 
 
 def initialize(pin, state):
