@@ -31,10 +31,12 @@ def get_time_interval(ref_day, time):
 
 
 def get_initial_state(now):
+    '''return the inverse of the state we want due to state *= -1 in work_night_shift()'''
+
     if now.hour > 21 or now.hour < 10:
-        return 1
-    else:
         return -1
+    else:
+        return 1
 
 
 def initialize(pin, state):
@@ -81,6 +83,7 @@ def work_night_shift(pi, switch, state):
 if __name__ == '__main__':
     log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_aware.log'
     logging.basicConfig(filename=log_path, format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
+    logging.debug('<> <> <> <> <> <> <> <> <> <> <> <>')
 
     switch = 7  # gpio pin controlling relay
     state = get_initial_state(get_now())
@@ -92,5 +95,7 @@ if __name__ == '__main__':
             work_night_shift(pi, switch, state)
         except Exception as e:
             logging.error('{}'.format(e))
+            life = False
         except KeyboardInterrupt:
             logging.debug('...user exit received...')
+            life = False
