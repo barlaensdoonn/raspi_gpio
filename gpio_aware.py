@@ -15,15 +15,15 @@ def get_now():
     return datetime.now()
 
 
-def get_tmrw(day):
-    return date(day.year, day.month, day.day) + timedelta(days=1)
+def get_tmrw():
+    now = get_now()
+    return date(now.year, now.month, now.day) + timedelta(days=1)
 
 
 def get_future_time(ref_day, hour):
-    '''return datetime object representing following day at hour [must be 0-23]'''
+    '''return datetime object representing day at hour [must be 0-23]'''
 
-    tmrw = get_tmrw(ref_day)
-    return datetime(tmrw.year, tmrw.month, tmrw.day, hour, 0, 0)
+    return datetime(ref_day.year, ref_day.month, ref_day.day, hour, 0, 0)
 
 
 def get_time_interval(ref_day, time):
@@ -31,7 +31,7 @@ def get_time_interval(ref_day, time):
 
 
 def get_initial_state(now):
-    '''return the inverse of the state we want due to state *= -1 in work_night_shift()'''
+    '''return the opposite of the state we want due to state *= -1 in work_night_shift()'''
 
     if now.hour > 21 or now.hour < 10:
         return -1
@@ -39,15 +39,15 @@ def get_initial_state(now):
         return 1
 
 
-def initialize(pin, state):
+def initialize(pin):
     logging.debug('initializing pigpiod.pi() class')
     pi = pigpio.pi()
 
     logging.debug('setting pin {} as output'.format(pin))
     pi.set_mode(pin, pigpio.OUTPUT)
 
-    logging.debug('writing initial state {} to pin {}'.format(state, pin))
-    pi.write(pin, state)
+    logging.debug('writing initial state 0 to pin {}'.format(state, pin))
+    pi.write(pin, 0)
 
     return pi
 
@@ -55,13 +55,14 @@ def initialize(pin, state):
 def work_night_shift(pi, switch, state):
     '''
     states[key][0] is int to write to turn pin off/on
-    states[key][1] holds hour to turn off/on
-    -1 represents off; 1 is inverse
+    states[key][1] is func to get day of next future time
+    states[key][2] holds hour to turn off/on
+    -1 represents off; 1 is on
     currently wakeup is @ 21:00, bedtime is @ 10:00
     '''
     states = {
-        -1: (0, 21),
-        1: (1, 10)
+        -1: (0, get_now, 21),
+        1: (1, get_tmrw, 10)
     }
 
     state *= -1
@@ -70,7 +71,7 @@ def work_night_shift(pi, switch, state):
     pi.write(switch, states[state][0])
     logging.debug('wrote {} to gpio pin {}'.format(states[state][0], switch))
 
-    sleep_until = get_future_time(get_now(), states[state][1])
+    sleep_until = get_future_time(states[state][1](), states[state][2])
     logging.debug('sleep_until calculated as {}'.format(sleep_until))
 
     sleep_interval = get_time_interval(get_now(), sleep_until)
@@ -92,7 +93,7 @@ if __name__ == '__main__':
 
     switch = 7  # gpio pin controlling relay
     state = get_initial_state(get_now())
-    pi = initialize(switch, state)
+    pi = initialize(switch)
     life = True
 
     while life:
