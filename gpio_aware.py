@@ -40,8 +40,10 @@ def get_time_interval(ref_day, time):
 
 def work_night_shift(pi, switch, state):
     '''
-    -1 represents off, calculates time to next on; 1 is inverse
-    currently wakeup is @ 21:00, bedtime is @ 10:00 (hour is held in states[key][1])
+    states[key][0] is int to write to turn pin off/on
+    states[key][1] holds hour to turn off/on
+    -1 represents off; 1 is inverse
+    currently wakeup is @ 21:00, bedtime is @ 10:00
     '''
     states = {
         -1: (0, 21),
@@ -83,6 +85,5 @@ if __name__ == '__main__':
             work_night_shift(pi, switch, state)
         except Exception as e:
             logging.error('{}'.format(e))
-            life = False
         except KeyboardInterrupt:
             logging.debug('...user exit received...')
