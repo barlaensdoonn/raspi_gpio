@@ -98,7 +98,8 @@ if __name__ == '__main__':
 
     while life:
         try:
-            work_night_shift(pi, switch, state)
+            update_state = work_night_shift(pi, switch, state)
+            state = update_state
         except Exception as e:
             logging.error('{}'.format(e))
             life = False
