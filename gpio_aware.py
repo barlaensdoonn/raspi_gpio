@@ -3,6 +3,8 @@
 # 8/3/17
 # updated 8/4/17
 
+# NOTE: must start pigpio as daemon before running script: sudo pigpiod
+
 import time
 import pigpio
 import logging
