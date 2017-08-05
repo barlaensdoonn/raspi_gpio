@@ -6,8 +6,8 @@
 # NOTE: must start pigpio as daemon before running script: sudo pigpiod
 
 import time
-import pigpio
 import logging
+import gpio_util
 from datetime import date, datetime, timedelta
 
 
@@ -37,19 +37,6 @@ def get_initial_state(now):
         return -1
     else:
         return 1
-
-
-def initialize(pin):
-    logging.debug('initializing pigpiod.pi() class')
-    pi = pigpio.pi()
-
-    logging.debug('setting pin {} as output'.format(pin))
-    pi.set_mode(pin, pigpio.OUTPUT)
-
-    logging.debug('writing initial state 0 to pin {}'.format(state, pin))
-    pi.write(pin, 0)
-
-    return pi
 
 
 def work_night_shift(pi, switch, state):
@@ -93,7 +80,7 @@ if __name__ == '__main__':
 
     switch = 7  # gpio pin controlling relay
     state = get_initial_state(get_now())
-    pi = initialize(switch)
+    pi = gpio_util.initialize(switch)
     life = True
 
     while life:
