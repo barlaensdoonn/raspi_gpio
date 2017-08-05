@@ -5,9 +5,8 @@
 
 import time
 import pigpio
+import logging
 from datetime import date, datetime, timedelta
-
-life = True
 
 
 def initialize(pin):
@@ -48,23 +47,40 @@ def work_night_shift(pi, switch, state):
     }
 
     state *= -1
+    logging.debug('changed state to {}'.format(state))
+
     pi.write(switch, states[state][0])
-    sleep_till = get_future_time(get_now(), states[state][1])
-    sleep_interval = get_time_interval(get_now(), sleep_till)
+    logging.debug('wrote {} to gpio pin {}'.format(states[state][0], switch))
+
+    sleep_until = get_future_time(get_now(), states[state][1])
+    logging.debug('sleep_until calculated as {}'.format(sleep_until))
+
+    sleep_interval = get_time_interval(get_now(), sleep_until)
+    logging.debug('sleep_interval calculated as {}'.format(sleep_interval))
+
+    logging.debug('sleeping for {} seconds...'.format(sleep_interval.total_seconds()))
     time.sleep(sleep_interval.total_seconds())
+
+    logging.debug('yawn')
+    logging.debug('<> <> <> <> <> <> <> <> <> <> <> <>')
 
     return state
 
 
 if __name__ == '__main__':
-    switch = 7  # pin controlling relay
+    log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_aware.log'
+    logging.basicConfig(filename=log_path, format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
+
+    switch = 7  # gpio pin controlling relay
     pi = initialize(switch)
     state = 1
+    life = True
 
     while life:
         try:
             work_night_shift(pi, switch, state)
-        except Exception:
+        except Exception as e:
+            logging.error('{}'.format(e))
             life = False
         except KeyboardInterrupt:
-            print('...user exit received...')
+            logging.debug('...user exit received...')
