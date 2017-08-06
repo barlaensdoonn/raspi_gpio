@@ -4,37 +4,36 @@
 # updated 8/5/17
 
 import socket
-from datetime import datetime
 
 
-def encode_now():
-    now = datetime.now().strftime("%H:%M:%S")
-    now += '\r\n'
-    return now.encode()
+def encode_on():
+    return 'on\r\n'.encode()
 
 
-def raw_client(hostport):
+def encode_off():
+    return 'off\r\n'.encode()
+
+
+def raw_client(hostport, state):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(hostport)
-    msg = encode_now()
-    client.sendall(msg)
-    rcv = client.recv(1024).decode().strip()
+    client.sendall(state)
+    # rcv = client.recv(1024).decode().strip()
     client.close()
 
-    return (msg.decode().strip(), rcv)
+    return state.decode().strip()
 
 
-def context_client(hostport):
+def context_client(hostport, state):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
         client.connect(hostport)
-        msg = encode_now()
-        client.sendall(msg)
+        client.sendall(state)
 
-    return msg.decode().strip()
+    return state.decode().strip()
 
 
 if __name__ == '__main__':
-    hostport = ('', 9999)
+    hostport = ('192.168.1.149', 9999)
 
-    msg = context_client(hostport)
+    msg = context_client(hostport, encode_on())
     print('sent: {}'.format(msg))
