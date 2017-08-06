@@ -1,11 +1,10 @@
 #!/usr/bin/python3
-# control relay via gpio and sockets
+# control relay via gpio and received sockets
 # 8/5/17
 # updated 8/5/17
 
 # NOTE: must start pigpio as daemon before running script: sudo pigpiod
 
-import time
 import logging
 import gpio_util
 import socketserver
