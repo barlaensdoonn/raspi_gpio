@@ -21,9 +21,10 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
     def parse_msg(self):
         # self.request is the TCP socket connected to the client
+        logging.debug('client {} connected'.format(self.client_address[0]))
         self.data = self.request.recv(1024)
         self.decoded = self.data.decode().strip()
-        logging.debug("{} wrote: {}".format(self.client_address[0], self.decoded))
+        logging.info("{} wrote: {}".format(self.client_address[0], self.decoded))
 
     def get_state(self):
         states = {'on': 1, 'off': 0}
@@ -35,14 +36,15 @@ class TCPHandler(socketserver.BaseRequestHandler):
             self.state = None
 
     def handle(self):
+        # TODO: maybe send back state so client app can store it
         self.parse_msg()
         self.get_state()
 
-        if self.state:
+        if self.state == 1 or self.state == 0:
             logging.debug('writing {} to pin {} via self.server.pi.write()'.format(self.state, self.server.switch))
             self.server.pi.write(self.server.switch, self.state)
         else:
-            logging.warning('invalid command {} received, ignoring...'.format(self.decoded))
+            logging.warning("invalid command '{}' received, ignoring...".format(self.decoded))
 
 
 def initialize():
