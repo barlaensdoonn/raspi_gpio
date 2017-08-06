@@ -48,6 +48,7 @@ def initialize():
     switch = 7  # gpio pin controlling relay
     hostport = ('', 9999)
 
+    logging.debug('initializing server...')
     server = socketserver.TCPServer(hostport, TCPHandler)
     server.switch = switch
     server.pi = gpio_util.initialize(server.switch)
@@ -56,7 +57,7 @@ def initialize():
 
 
 if __name__ == '__main__':
-    log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_aware.log'
+    log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_socket.log'
     logging.basicConfig(filename=log_path, format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
     logging.debug('<> <> <> <> <> <> <> <> <> <> <> <>')
 
