@@ -30,11 +30,11 @@ def context_client(hostport):
         msg = encode_now()
         client.sendall(msg)
 
-    return (msg.decode().strip())
+    return msg.decode().strip()
 
 
 if __name__ == '__main__':
     hostport = ('', 9999)
 
-    package = context_client(hostport)
-    print('sent: {}\nreceived: {}'.format(*package))
+    msg = context_client(hostport)
+    print('sent: {}'.format(msg))
