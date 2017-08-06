@@ -5,6 +5,7 @@
 
 # NOTE: must start pigpio as daemon before running script: sudo pigpiod
 
+import socket
 import logging
 import gpio_util
 import socketserver
@@ -46,9 +47,10 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
 def initialize():
     switch = 7  # gpio pin controlling relay
-    hostport = ('', 9999)
+    host = socket.gethostname()
+    hostport = (host, 9999)
 
-    logging.debug('initializing server...')
+    logging.debug('initializing server at {} on port {}'.format(*hostport))
     server = socketserver.TCPServer(hostport, TCPHandler)
     server.switch = switch
     server.pi = gpio_util.initialize(server.switch)
