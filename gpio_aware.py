@@ -75,7 +75,7 @@ def work_night_shift(pi, switch, state):
 
 if __name__ == '__main__':
     log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_aware.log'
-    logging.basicConfig(filename=log_path, format='%(asctime)s %(level)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
+    logging.basicConfig(filename=log_path, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
     logging.debug('<> <> <> <> <> <> <> <> <> <> <> <>')
 
     switch = 7  # gpio pin controlling relay
