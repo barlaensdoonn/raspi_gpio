@@ -56,7 +56,7 @@ def initialize():
     logging.debug('initializing open server on port {}'.format(hostport[1]))
     server = socketserver.TCPServer(hostport, TCPHandler)
     server.switch = switch
-    server.pi = gpio_util.initialize(server.switch)
+    server.pi = gpio_util.initialize_pigpiod(server.switch)
 
     return server
 
