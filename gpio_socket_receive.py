@@ -63,7 +63,7 @@ def initialize():
 
 if __name__ == '__main__':
     log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_socket.log'
-    logging.basicConfig(filename=log_path, format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
+    logging.basicConfig(filename=log_path, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
 
     server = initialize()
 
