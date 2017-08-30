@@ -7,7 +7,7 @@ import pigpio
 import logging
 
 
-def initialize_pigpiod(pin):
+def initialize(pin):
     logging.debug('initializing pigpiod.pi() class')
     pi = pigpio.pi()
 
