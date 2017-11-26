@@ -8,11 +8,11 @@
 import time
 import pigpio
 
-switch_pin = 7
+switch_pin = 4
 pi = pigpio.pi()
-pi.set_mode(7, pigpio.OUTPUT)
+pi.set_mode(switch_pin, pigpio.OUTPUT)
 
 # write pin 7 high
-pi.write(7, 1)
+pi.write(switch_pin, 1)
 time.sleep(1)
-pi.write(7, 0)
+pi.write(switch_pin, 0)
