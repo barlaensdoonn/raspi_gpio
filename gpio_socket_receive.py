@@ -46,6 +46,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
             logging.warning("invalid command '{}' received, ignoring...".format(self.decoded))
 
     def finish(self):
+        '''finish method is always called by the base handler after handle method has completed'''
         logging.info('<> <> <> <> <> <> <> <> <> <> <> <>')
 
 
