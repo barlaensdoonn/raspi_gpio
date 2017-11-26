@@ -50,7 +50,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
 
 def initialize():
-    switch = 7  # gpio pin controlling relay
+    switch = 4  # gpio pin controlling relay
     hostport = ('', 9999)
 
     logging.debug('initializing open server on port {}'.format(hostport[1]))
