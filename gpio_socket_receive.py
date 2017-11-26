@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # control relay via gpio and received sockets
 # 8/5/17
-# updated 8/5/17
+# updated 11/26/17
 
 # NOTE: must start pigpio as daemon before running script: sudo pigpiod
 
@@ -62,7 +62,7 @@ def initialize():
 
 
 if __name__ == '__main__':
-    log_path = '/home/pi/gitbucket/raspi_gpio/logs/gpio_socket.log'
+    log_path = 'logs/gpio_socket.log'
     logging.basicConfig(filename=log_path, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y/%m/%d %H:%M:%S', level=logging.DEBUG)
 
     server = initialize()
